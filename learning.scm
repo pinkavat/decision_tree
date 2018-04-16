@@ -46,8 +46,12 @@
 ;;   (entropy minus average conditional entropy)
 (define choose-attribute
   (lambda (examples candidates attrib-values)
-    (choose-attribute-helper examples (cdr candidates) attrib-values (car candidates)
-                             (information-gain examples (car candidates) attrib-values))))
+    (choose-attribute-helper 
+	examples 
+	(cdr candidates) 
+	attrib-values 
+	(car candidates)
+	(information-gain examples (car candidates) attrib-values))))
 
 ;; Procedure:
 ;;  choose-attribute-helper
@@ -135,7 +139,8 @@
 ;; Procedure: 
 ;;  decision-tree-learning-helper
 ;; Purpose;
-;;  prevent repeat computation in decision-tree-learning
+;;  create a single subtree, 
+;;  preventing repeat computation in decision-tree-learning
 ;; Parameters:
 ;;  examples, a list
 ;;  attribs, an association list
