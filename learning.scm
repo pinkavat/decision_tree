@@ -49,6 +49,18 @@
     (choose-attribute-helper examples (cdr candidates) attrib-values (car candidates)
                              (information-gain examples (car candidates) attrib-values))))
 
+;; Procedure:
+;;  choose-attribute-helper
+;; Purpose:
+;;  find an optimal attribute to split on, using a recursively found maximum
+;; Parameters:
+;;  examples, a list
+;;  remaining, a list
+;;  attrib-values, an association list
+;;  best-so-far, a value
+;;  max-so-far, a number
+;; Produces:
+;;  attrib, a value
 (define choose-attribute-helper
   (lambda (examples remaining attrib-values best-so-far max-so-far)
     (let ([info-gain
@@ -82,7 +94,7 @@
 ;;
 ;; Parameters
 ;;   examples, a list
-;;   attribs, an association list
+;;   attribs, a list
 ;;   default, a value
 ;;
 ;; Produces
@@ -114,10 +126,20 @@
       [(null? attribs)
        (plurality-value examples)]
       [else
-       (decision-tree-learning-helper examples attribs default)])))
+       (decision-tree-learning-helper examples attribs)])))
 
+
+;; Procedure: 
+;;  decision-tree-learning-helper
+;; Purpose;
+;;  prevent repeat computation in decision-tree-learning
+;; Parameters:
+;;  examples, a list
+;;  attribs, an association list
+;; Produces:
+;;  decision-tree, a decision-tree
 (define decision-tree-learning-helper
-  (lambda (examples attribs default)
+  (lambda (examples attribs)
     (let* ([best (choose-attribute examples (map car attribs) attribs)]
           [vals (cdr (assoc best attribs))]
           [new-candidates (filter-list (map car attribs) best)]
