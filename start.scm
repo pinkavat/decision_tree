@@ -1,6 +1,6 @@
 (load "mushroom.scm") ; Load procedures for loading mushroom data
 (load "dtree.scm")    ; Load decision-tree routines
-(load "learning.scm")
+(load "learning.scm") 
 
 ; Load the attributes list for mushrooms
 (define mushroom-attributes
@@ -13,7 +13,7 @@
   (lambda (alist)
     (map car alist)))
 
-(label-counts mushroom-examples)
+#| (label-counts mushroom-examples)
 
 (plurality-value mushroom-examples)
 
@@ -33,6 +33,7 @@
 
 (information-gain mushroom-examples "stalk-shape" mushroom-attributes)
 (information-gain mushroom-examples "gill-size" mushroom-attributes)
+|#
 
 (define decision-stump
   (cons "gill-size"
@@ -41,7 +42,7 @@
 
 (define first-instance (cdar mushroom-examples))
 
-(cdr (assoc (cdr (assoc (car decision-stump) first-instance)) (cdr decision-stump)))
+; (cdr (assoc (cdr (assoc (car decision-stump) first-instance)) (cdr decision-stump)))
       
       
       

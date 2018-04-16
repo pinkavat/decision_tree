@@ -49,24 +49,28 @@
     (choose-attribute-helper examples (cdr candidates) attrib-values (car candidates)
                              (information-gain examples (car candidates) attrib-values))))
 
-; Remember to use a let for information gain
 (define choose-attribute-helper
   (lambda (examples remaining attrib-values best-so-far max-so-far)
+    (let ([info-gain
+           (if (null? remaining)
+               0
+               (information-gain examples (car remaining) attrib-values))])
+      ; prevent repeat computations
     (cond  [(null? remaining) best-so-far]
-           [(> (information-gain examples (car remaining) attrib-values) max-so-far)
+           [(> info-gain max-so-far)
             (choose-attribute-helper
              examples
              (cdr remaining)
              attrib-values
              (car remaining)
-             (information-gain examples (car remaining) attrib-values))]
+             info-gain)]
            [else
             (choose-attribute-helper
              examples
              (cdr remaining)
              attrib-values
              best-so-far
-             max-so-far)])))
+             max-so-far)]))))
 
 
 ;;
@@ -78,7 +82,7 @@
 ;;
 ;; Parameters
 ;;   examples, a list
-;;   attribs, a list
+;;   attribs, an association list
 ;;   default, a value
 ;;
 ;; Produces
@@ -100,5 +104,37 @@
 ;;      whose car is an attribute and whose cdr is an association list 
 ;;      with attribute values as keys and decision trees as values.
 
+(define decision-tree-learning
+  (lambda (examples attribs default)
+    (cond
+      [(null? examples)
+       default]
+      [(all-same-label? examples)
+       (caar (label-counts examples))]
+      [(null? attribs)
+       (plurality-value examples)]
+      [else
+       (decision-tree-learning-helper examples attribs default)])))
+
+(define decision-tree-learning-helper
+  (lambda (examples attribs default)
+    (let* ([best (choose-attribute examples (map car attribs) attribs)]
+          [vals (cdr (assoc best attribs))]
+          [new-candidates (filter-list (map car attribs) best)]
+          [new-attribs (map (r-s assoc attribs) new-candidates)])
+      (cons best
+       (map
+       (lambda (val)
+         (cons val (decision-tree-learning
+          (filter-examples-by-attribute-value examples best val)
+          new-attribs
+          (plurality-value examples))))
+       vals)))))
+          
+          
+    
+      
+       
+            
 
 
