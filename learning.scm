@@ -64,7 +64,10 @@
 (define choose-attribute-helper
   (lambda (examples remaining attrib-values best-so-far max-so-far)
     (let ([info-gain
-           (if (null? remaining)
+           ; this is a little goofy but I wasn't sure how to do a 
+		   ; local binding in a cond statement so I went with a bit of a hacky
+		   ; solution
+		   (if (null? remaining)
                0
                (information-gain examples (car remaining) attrib-values))])
       ; prevent repeat computations
