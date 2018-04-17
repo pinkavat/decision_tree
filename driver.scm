@@ -14,14 +14,22 @@
 
 (define test-examples
   (list 
-  (list #\y (cons "property A" #\t) (cons "property B" #\t) (cons "property C" #\t))
-  (list #\y (cons "property A" #\t) (cons "property B" #\t) (cons "property C" #\f))
-  (list #\y (cons "property A" #\t) (cons "property B" #\f) (cons "property C" #\t))
-  (list #\n (cons "property A" #\t) (cons "property B" #\f) (cons "property C" #\f))
-  (list #\y (cons "property A" #\f) (cons "property B" #\t) (cons "property C" #\t))
-  (list #\n (cons "property A" #\f) (cons "property B" #\t) (cons "property C" #\f))
-  (list #\y (cons "property A" #\f) (cons "property B" #\f) (cons "property C" #\t))
-  (list #\n (cons "property A" #\f) (cons "property B" #\f) (cons "property C" #\f))))
+  (list #\y 
+  (cons "property A" #\t) (cons "property B" #\t) (cons "property C" #\t))
+  (list #\y 
+  (cons "property A" #\t) (cons "property B" #\t) (cons "property C" #\f))
+  (list #\y 
+  (cons "property A" #\t) (cons "property B" #\f) (cons "property C" #\t))
+  (list #\n 
+  (cons "property A" #\t) (cons "property B" #\f) (cons "property C" #\f))
+  (list #\y 
+  (cons "property A" #\f) (cons "property B" #\t) (cons "property C" #\t))
+  (list #\n 
+  (cons "property A" #\f) (cons "property B" #\t) (cons "property C" #\f))
+  (list #\y 
+  (cons "property A" #\f) (cons "property B" #\f) (cons "property C" #\t))
+  (list #\n 
+  (cons "property A" #\f) (cons "property B" #\f) (cons "property C" #\f))))
 
 (define test-attribs
   (list
@@ -44,7 +52,8 @@
 (display "check whether property C is true. If it is, return yes. Otherwise")
 (display " check whether property A (or property B) is true. If it isn't, ")
 (display "return false. Otherwise, check whether property B (or property A, ")
-(display "if we had property B earlier) is true. If it is, return true.") (newline) (newline)
+(display "if we had property B earlier) is true. If it is, return true.") 
+(newline) (newline)
 (display (decision-tree-learning test-examples test-attribs #\t)) (newline)
 (display "this decision tree follows the decision path we expected.")
 
