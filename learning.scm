@@ -1,3 +1,4 @@
+(load "dtree.scm")
 ;;
 ;; File
 ;;   learning.scm
@@ -12,9 +13,7 @@
 ;;
 ;; Provides
 ;;   (decision-tree-learning examples attribs default)
-;;   (decision-tree-learning-helper examples attribs)
 ;;   (choose-attribute examples candidates attrib-values)
-
 
 ;;
 ;; Procedure
@@ -48,32 +47,13 @@
 ;;   (entropy minus average conditional entropy)
 (define choose-attribute
   (lambda (examples candidates attrib-values)
-    (choose-attribute-helper 
-	examples 
-	(cdr candidates) 
-	attrib-values 
-	(car candidates)
-	(information-gain examples (car candidates) attrib-values))))
+    (choose-attribute-helper examples (cdr candidates) attrib-values (car candidates)
+                             (information-gain examples (car candidates) attrib-values))))
 
-;; Procedure:
-;;  choose-attribute-helper
-;; Purpose:
-;;  find an optimal attribute to split on, using a recursively found maximum
-;; Parameters:
-;;  examples, a list
-;;  remaining, a list
-;;  attrib-values, an association list
-;;  best-so-far, a value
-;;  max-so-far, a number
-;; Produces:
-;;  attrib, a value
 (define choose-attribute-helper
   (lambda (examples remaining attrib-values best-so-far max-so-far)
     (let ([info-gain
-           ; this is a little goofy but I wasn't sure how to do a 
-		   ; local binding in a cond statement so I went with a bit of a hacky
-		   ; solution
-		   (if (null? remaining)
+           (if (null? remaining)
                0
                (information-gain examples (car remaining) attrib-values))])
       ; prevent repeat computations
@@ -103,7 +83,7 @@
 ;;
 ;; Parameters
 ;;   examples, a list
-;;   attribs, a list
+;;   attribs, an association list
 ;;   default, a value
 ;;
 ;; Produces
@@ -127,41 +107,34 @@
 
 (define decision-tree-learning
   (lambda (examples attribs default)
+    (let helper ([ex examples]
+                 [candidates (map car attribs)]
+                 [def default])
     (cond
-      [(null? examples)
-       default]
-      [(all-same-label? examples)
-       (caar (label-counts examples))]
-      [(null? attribs)
-       (plurality-value examples)]
+      [(null? ex)
+       def]
+      [(all-same-label? ex)
+       (caar (label-counts ex))]
+      [(null? candidates)
+       (plurality-value ex)]
       [else
-       (decision-tree-learning-helper examples attribs)])))
-
-
-;; Procedure: 
-;;  decision-tree-learning-helper
-;; Purpose;
-;;  create a single subtree, 
-;;  preventing repeat computation in decision-tree-learning
-;; Parameters:
-;;  examples, a list
-;;  attribs, an association list
-;; Produces:
-;;  decision-tree, a decision-tree
-(define decision-tree-learning-helper
-  (lambda (examples attribs)
-    (let* ([best (choose-attribute examples (map car attribs) attribs)]
-          [vals (cdr (assoc best attribs))]
-          [new-candidates (filter-list (map car attribs) best)]
-          [new-attribs (map (r-s assoc attribs) new-candidates)])
-      (cons best
-       (map
-       (lambda (val)
-         (cons val (decision-tree-learning
-          (filter-examples-by-attribute-value examples best val)
-          new-attribs
-          (plurality-value examples))))
-       vals)))))
+       (let* ([best (choose-attribute ex candidates attribs)]
+              ; choose attribute to split on
+              [vals (cdr (assoc best attribs))]
+              ; values of chosen attribute
+              [new-candidates (filter-list candidates best)])
+              ; filter out chosen attribute from list of candidates
+         (cons best
+               (map
+                (lambda (val)
+                  (cons val (helper
+                             (filter-examples-by-attribute-value ex best val)
+                             new-candidates
+                             (plurality-value ex))))
+                vals)
+               ; for each value of chosen attribute, create new decision tree
+               ; anonymous procedure creates this decision tree
+               ))]))))
           
           
     
