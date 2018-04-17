@@ -15,6 +15,8 @@
 ;;   (decision-tree-learning examples attribs default)
 ;;   (choose-attribute examples candidates attrib-values)
 
+
+
 ;;
 ;; Procedure
 ;;   choose-attribute
@@ -48,18 +50,27 @@
 (define choose-attribute
     (lambda (examples candidates attributes)
         (car 
-            (let left-fold-kernel 
+            (let left-fold-kernel ;; Scheme doesn't have built-in fold,
+                                  ;;  so here is a homemade fold-left
                 ([procedure
+                    ;; Anonymous sub-procedure applied to folding
+                    ;; Takes the given attribute and an
+                    ;; attribute-information pair, and updates the
+                    ;; pair to the attribute of maximum information
                     (lambda (val prev)
                         (let [(inf-gain
                                 (information-gain examples val attributes))]
                             (if (> inf-gain (cdr prev))
                                 (cons val inf-gain)
                                 prev)))]
+
+                ;; The algorithm runs with maximum pre-set to the first
+                ;; of the attributes; by precondition candidates is nonempty
                 [start (cons (car candidates)
                 (information-gain examples (car candidates) attributes))]
                 [remaining (cdr candidates)])
-                
+
+                ;; Invoke the fold-left on the above parameters
                 (if (null? remaining)
                     start
                     (left-fold-kernel
