@@ -8,6 +8,7 @@
 
 (load "dtree.scm")    ; Load decision-tree routines
 (load "learning.scm") 
+(load "mushroom.scm") ; Load the mushrooms
 
 ; examples for learning the rule C or (A and B)
 
@@ -47,4 +48,23 @@
 (display (decision-tree-learning test-examples test-attribs #\t)) (newline)
 (display "this decision tree follows the decision path we expected.")
 
+;; Mushroom tree analysis
 
+; Load the attributes list for mushrooms
+(define mushroom-attributes
+  (load-mushroom-attributes "mushroom-attribs.txt"))
+; Load all the mushroom examples (labels with attribute association lists)
+(define mushroom-examples
+  (load-mushroom-examples "mushrooms.txt" mushroom-attributes))
+
+; As per the in-class lab, we use the plurality of the whole example
+; set as our default decision in spite of its obvious practical 
+; ramifications [DISCLAIMER: DO NOT USE THIS ALGORITHM TO DECIDE WHETHER
+; OR NOT TO EAT A MUSHROOM]
+(define default (plurality-value mushroom-examples))
+
+(newline)
+(newline)
+(display "Decision Tree for the mushrooms:")(newline)
+(display (decision-tree-learning mushroom-examples mushroom-attributes default))
+(newline)
