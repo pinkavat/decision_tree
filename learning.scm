@@ -12,7 +12,9 @@
 ;;
 ;; Provides
 ;;   (decision-tree-learning examples attribs default)
+;;   (decision-tree-learning-helper examples attribs)
 ;;   (choose-attribute examples candidates attrib-values)
+
 
 ;;
 ;; Procedure
