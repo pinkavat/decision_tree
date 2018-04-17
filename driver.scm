@@ -1,23 +1,13 @@
-(load "mushroom.scm") ; Load procedures for loading mushroom data
+;; File:
+;;   driver.scm
+;; Summary
+;;  testing for decision-tree-learner
+;; Provides:
+;;  [nothing]
+
+
 (load "dtree.scm")    ; Load decision-tree routines
 (load "learning.scm") 
-
-; Load the attributes list for mushrooms
-(define mushroom-attributes
-  (load-mushroom-attributes "mushroom-attribs.txt"))
-; Load all the mushroom examples (labels with attribute association lists)
-(define mushroom-examples
-  (load-mushroom-examples "mushrooms.txt" mushroom-attributes))
-
-(define get-keys
-  (lambda (alist)
-    (map car alist)))
-
-(define get-first-n
-  (lambda (n lst)
-    (if (= n 0)
-        null
-        (cons (car lst) (get-first-n (- n 1) (cdr lst))))))
 
 ; examples for learning the rule C or (A and B)
 
