@@ -46,32 +46,26 @@
 ;;   attrib is the member of candidates with the highest information gain 
 ;;   (entropy minus average conditional entropy)
 (define choose-attribute
-  (lambda (examples candidates attrib-values)
-    (choose-attribute-helper examples (cdr candidates) attrib-values (car candidates)
-                             (information-gain examples (car candidates) attrib-values))))
-
-(define choose-attribute-helper
-  (lambda (examples remaining attrib-values best-so-far max-so-far)
-    (let ([info-gain
-           (if (null? remaining)
-               0
-               (information-gain examples (car remaining) attrib-values))])
-      ; prevent repeat computations
-    (cond  [(null? remaining) best-so-far]
-           [(> info-gain max-so-far)
-            (choose-attribute-helper
-             examples
-             (cdr remaining)
-             attrib-values
-             (car remaining)
-             info-gain)]
-           [else
-            (choose-attribute-helper
-             examples
-             (cdr remaining)
-             attrib-values
-             best-so-far
-             max-so-far)]))))
+    (lambda (examples candidates attributes)
+        (car 
+            (let left-fold-kernel 
+                ([procedure
+                    (lambda (val prev)
+                        (let [(inf-gain
+                                (information-gain examples val attributes))]
+                            (if (> inf-gain (cdr prev))
+                                (cons val inf-gain)
+                                prev)))]
+                [start (cons (car candidates)
+                (information-gain examples (car candidates) attributes))]
+                [remaining (cdr candidates)])
+                
+                (if (null? remaining)
+                    start
+                    (left-fold-kernel
+                        procedure
+                        (procedure (car remaining) start)
+                        (cdr remaining)))))))
 
 
 ;;
