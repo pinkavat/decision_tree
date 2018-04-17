@@ -1,0 +1,17 @@
+Script started on Mon 16 Apr 2018 10:50:40 PM CDT
+$ mzscheme -l lang/plt-pretty-big-text.ss -f driver.scm
+we will use a toy example of learning the rule "C or (A and B)", training on all 8 possible examples.
+information gain of property A is 0.04879494069539825
+information gain of property B is 0.04879494069539825
+information gain of property C is 0.5487949406953982
+so we expect the decision tree created to split on property C and then property A or B, either is fine, as they are equivalent (and will remain so after splitting on property C). In particular, the decision path we expect it to take is check whether property C is true. If it is, return yes. Otherwise check whether property A (or property B) is true. If it isn't, return false. Otherwise, check whether property B (or property A, if we had property B earlier) is true. If it is, return true.
+
+(property C (t . y) (f property A (t property B (t . y) (f . n)) (f . n)))
+this decision tree follows the decision path we expected.
+
+Decision Tree for the mushrooms:
+(odor (a . e) (l . e) (c . p) (y . p) (f . p) (m . p) (n spore-print-color (k . e) (n . e) (b . e) (h . e) (r . p) (o . e) (u . e) (w habitat (g . e) (l cap-color (n . e) (b . e) (c . e) (g . e) (r . e) (p . e) (u . e) (e . e) (w . p) (y . p)) (m . e) (p . e) (u . e) (w . e) (d gill-size (b . e) (n . p))) (y . e)) (p . p) (s . p))
+$ exit
+exit
+
+Script done on Mon 16 Apr 2018 10:51:16 PM CDT
